@@ -10,14 +10,13 @@ function Todo(props) {
     <List className="todo__list">
       <ListItem>
         <ListItemText 
-          primary={props.todo.todo} 
-          secondary='PlaceHolder Deadline'   
+          primary={props.todo.todo}  
         /> 
       </ListItem>
       <DeleteForeverIcon 
         variant="contained" 
         color="secondary"
-        onClick={event => db.collection('todos').doc(props.todo.id).delete()}>Delete ToDo</DeleteForeverIcon>
+        onClick={event => db.collection('todos').doc(props.todo.id).delete()} />
     </List>
     
       // <li>{}</li>
