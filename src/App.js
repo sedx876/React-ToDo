@@ -37,7 +37,7 @@ function App() {
 
       <ul>
         {todos.map(todo => (
-          <Todo text={todo} />
+          <Todo key={todo} text={todo} />
         ))}
       </ul>
     </div>
