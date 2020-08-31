@@ -3,6 +3,7 @@ import './styles/App.css';
 import { Button, FormControl, InputLabel, Input, Typography } from '@material-ui/core'
 import Todo from './components/Todo'
 import db from './firebase'
+import firebase from 'firebase'
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -10,15 +11,16 @@ function App() {
   console.log(input)
 
   useEffect(() => {
-    db.collection('todos').onSnapshot(snapshot => {
-      setTodos(snapshot.docs.map(doc => doc.data().todo))
+    db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      setTodos(snapshot.docs.map(doc => ({id: doc.id, todo: doc.data().todo})))
     })
   }, [])
 
   const addTodo = (event) => {
     event.preventDefault()
     db.collection('todos').add({
-      todo: input
+      todo: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
     setTodos([...todos, input])
     setInput('')
@@ -27,7 +29,7 @@ function App() {
   return (
     <div className="App">
       <Typography variant="h2">
-        Your Todos
+        Your ToDos
       </Typography>
       <FormControl>
         <InputLabel>Write a ToDo</InputLabel>
@@ -46,7 +48,7 @@ function App() {
 
       <ul>
         {todos.map(todo => (
-          <Todo key={todo} text={todo} />
+          <Todo todo={todo} />
         ))}
       </ul>
     </div>
