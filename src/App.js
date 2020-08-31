@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/App.css';
 import { Button, FormControl, InputLabel, Input, Typography } from '@material-ui/core'
 import Todo from './components/Todo'
+import db from './firebase'
 
 function App() {
-  const [todos, setTodos] = useState(['Read', 'Write', 'Code']);
+  const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
   console.log(input)
 
+  useEffect(() => {
+    db.collection('todos').onSnapshot(snapshot => {
+      setTodos(snapshot.docs.map(doc => doc.data().todo))
+    })
+  }, [])
+
   const addTodo = (event) => {
     event.preventDefault()
-    console.log('It does work!')
+    db.collection('todos').add({
+      todo: input
+    })
     setTodos([...todos, input])
     setInput('')
   }
